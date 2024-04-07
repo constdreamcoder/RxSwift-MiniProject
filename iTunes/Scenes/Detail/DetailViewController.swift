@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import RxSwift
+import RxCocoa
 
 final class DetailViewController: UIViewController {
     
@@ -53,6 +55,8 @@ final class DetailViewController: UIViewController {
     }()
     
     var item: Item?
+    
+    let viewModel = DetailViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +116,13 @@ extension DetailViewController: UIViewControllerConfiguration {
     }
     
     func bind() {
+        guard let item = item else { return }
         
+        let input = DetailViewModel.Input(
+            installButtonTap: installButton.rx.tap, 
+            item: Observable<Item>.just(item)
+        )
+        
+        let output = viewModel.transform(input: input)
     }
 }
